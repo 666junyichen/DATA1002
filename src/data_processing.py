@@ -119,8 +119,13 @@ def detect_outliers(df: pd.DataFrame,
         outliers = (df[column] < lower_bound) | (df[column] > upper_bound)
     
     elif method == 'zscore':
-        z_scores = np.abs((df[column] - df[column].mean()) / df[column].std())
-        outliers = z_scores > threshold
+        std_val = df[column].std()
+        if std_val != 0:
+            z_scores = np.abs((df[column] - df[column].mean()) / std_val)
+            outliers = z_scores > threshold
+        else:
+            # If std is 0, all values are identical, so no outliers
+            outliers = pd.Series([False] * len(df), index=df.index)
     
     else:
         raise ValueError(f"Unknown method: {method}")
@@ -151,7 +156,11 @@ def normalize_data(df: pd.DataFrame,
         if method == 'minmax':
             min_val = df_copy[col].min()
             max_val = df_copy[col].max()
-            df_copy[col] = (df_copy[col] - min_val) / (max_val - min_val)
+            if max_val != min_val:
+                df_copy[col] = (df_copy[col] - min_val) / (max_val - min_val)
+            else:
+                # If all values are identical, set to 0
+                df_copy[col] = 0
         
         elif method == 'zscore':
             mean_val = df_copy[col].mean()
