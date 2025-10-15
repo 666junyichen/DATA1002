@@ -125,7 +125,7 @@ def detect_outliers(df: pd.DataFrame,
             outliers = z_scores > threshold
         else:
             # If std is 0, all values are identical, so no outliers
-            outliers = pd.Series([False] * len(df), index=df.index)
+            outliers = pd.Series([False] * len(df[column]), index=df[column].index)
     
     else:
         raise ValueError(f"Unknown method: {method}")
