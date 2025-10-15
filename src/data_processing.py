@@ -83,7 +83,9 @@ def handle_missing_values(df: pd.DataFrame,
                 df_copy[col].fillna(df_copy[col].median(), inplace=True)
     elif strategy == 'mode':
         for col in columns:
-            df_copy[col].fillna(df_copy[col].mode()[0], inplace=True)
+            mode_values = df_copy[col].mode()
+            if not mode_values.empty:
+                df_copy[col].fillna(mode_values[0], inplace=True)
     else:
         raise ValueError(f"Unknown strategy: {strategy}")
     
@@ -154,7 +156,10 @@ def normalize_data(df: pd.DataFrame,
         elif method == 'zscore':
             mean_val = df_copy[col].mean()
             std_val = df_copy[col].std()
-            df_copy[col] = (df_copy[col] - mean_val) / std_val
+            if std_val != 0:
+                df_copy[col] = (df_copy[col] - mean_val) / std_val
+            else:
+                df_copy[col] = 0
         
         else:
             raise ValueError(f"Unknown normalization method: {method}")
