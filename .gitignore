@@ -1,0 +1,17 @@
+# Keep large archives and raw submission bundles out of public commits.
+*.zip
+
+# Review source metadata and personal identifiers before publishing these.
+*.docx
+*.pdf
+*.xlsx
+*.xls
+*.xlsm
+*.ipynb
+
+# Keep raw extracted datasets out of default public commits; publish cleaned/final data instead.
+*_Raw_*.csv
+
+# Common notebook/runtime by-products.
+.ipynb_checkpoints/
+__pycache__/
